@@ -1,0 +1,69 @@
+
+
+const ag = 467000;
+const pg = 386000;
+const e = 0.0059357;
+var semiMajorAxis = (ag + pg)/2;
+var semiMinorAxis = semiMajorAxis * Math.sqrt(1 - Math.pow(e, 2));
+
+// var positions = [];
+
+// for (var i = -180; i <= 180; i+=10) {
+
+//   var axis = semiMinorAxis + Math.cos(i * Math.PI / 180.0) * (semiMajorAxis - semiMinorAxis);
+
+//   // positions.push(Cesium.Cartesian3.fromDegrees(i, 0, axis));
+//   var inclination_m = Cesium.Matrix3.fromRotationY(-1 * Cesium.Math.toRadians(74.04));
+//   var rotated = Cesium.Matrix3.multiplyByVector(inclination_m, Cesium.Cartesian3.fromDegrees(i, 0, axis), new Cesium.Cartesian3());
+//   // console.log(rotated);
+//   positions.push(rotated);
+
+// }
+
+// var entity = viewer.entities.add({
+
+// polyline : {
+
+//     positions : positions,
+
+//     followSurface : true,
+
+//     width : 4,
+
+//     material : Cesium.Color.RED
+
+// }
+// });
+
+// var czml = [
+//   {
+//     id: "document",
+//     name: "CZML Geometries: Polyline",
+//     version: "1.0",
+//   },
+//   {
+//     id: "redLine",
+//     name: "Red line clamped to terain",
+//     polyline: {
+//       positions: {
+//         cartographicDegrees: [-75, 35, 0, -125, 35, 0],
+//       },
+//       material: {
+//         solidColor: {
+//           color: {
+//             rgba: [255, 0, 0, 255],
+//           },
+//         },
+//       },
+//       width: 5,
+//       clampToGround: true,
+//     },
+//   }
+// ];
+
+
+
+
+// var dataSourcePromise = Cesium.CzmlDataSource.load(czml);
+// viewer.dataSources.add(dataSourcePromise);
+// viewer.zoomTo(dataSourcePromise);
