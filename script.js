@@ -12,17 +12,17 @@ const viewer = new Cesium.Viewer('cesiumContainer', {
   imageryProvider: Cesium.createWorldImagery({
     style: Cesium.IonWorldImageryStyle.AERIAL_WITH_LABELS
   }),
-  baseLayerPicker: false
-//   skyBox : new Cesium.SkyBox({
-//     sources : {
-//       positiveX : 'img1.jpeg',
-//       negativeX : 'img1.jpeg',
-//       positiveY : 'img1.jpeg',
-//       negativeY : 'img1.jpeg',
-//       positiveZ : 'img1.jpeg',
-//       negativeZ : 'img1.jpeg'
-//     }
-// }),
+  baseLayerPicker: false,
+  skyBox : new Cesium.SkyBox({
+    sources : {
+      positiveX : 'img1.jpeg',
+      negativeX : 'img1.jpeg',
+      positiveY : 'img1.jpeg',
+      negativeY : 'img1.jpeg',
+      positiveZ : 'img1.jpeg',
+      negativeZ : 'img1.jpeg'
+    }
+}),
   
   // baseLayerPicker: false, geocoder: false, homeButton: false, infoBox: false,
   // navigationHelpButton: false, sceneModePicker: false
