@@ -12,17 +12,17 @@ const viewer = new Cesium.Viewer('cesiumContainer', {
   imageryProvider: Cesium.createWorldImagery({
     style: Cesium.IonWorldImageryStyle.AERIAL_WITH_LABELS
   }),
-  baseLayerPicker: false,
-  skyBox : new Cesium.SkyBox({
-    sources : {
-      positiveX : 'img1.jpeg',
-      negativeX : 'img1.jpeg',
-      positiveY : 'img1.jpeg',
-      negativeY : 'img1.jpeg',
-      positiveZ : 'img1.jpeg',
-      negativeZ : 'img1.jpeg'
-    }
-}),
+  baseLayerPicker: false
+//   skyBox : new Cesium.SkyBox({
+//     sources : {
+//       positiveX : 'img1.jpeg',
+//       negativeX : 'img1.jpeg',
+//       positiveY : 'img1.jpeg',
+//       negativeY : 'img1.jpeg',
+//       positiveZ : 'img1.jpeg',
+//       negativeZ : 'img1.jpeg'
+//     }
+// }),
   
   // baseLayerPicker: false, geocoder: false, homeButton: false, infoBox: false,
   // navigationHelpButton: false, sceneModePicker: false
@@ -94,7 +94,12 @@ debrisRec.forEach((rec, j) => {
                     <h2>PerigeeHeight: ${debrisTLE[j].perigeeHeight} km</h2>
                     <h2>Inclination : ${debrisTLE[j].inclination}°</h2>
                     <h2>Period: ${debrisTLE[j].period} minutes</h2>
-                  </div>`,
+                  </div>
+                  <div>
+                    <h2>Track when this particle:</h2>
+                    <button onclick=trackLocation()">track!</button>
+                  </div>
+                  `,
     point: { pixelSize: 5, color: Cesium.Color.DIMGREY},
     path: {
       show: true,
@@ -199,5 +204,9 @@ viewer.selectedEntityChanged.addEventListener(function (entity) {
   }
 });
 
+
+const trackLocation = () => {
+  console.log(viewer.trackedEntity.name)
+}
 
 
