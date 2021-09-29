@@ -1,7 +1,7 @@
 // const debrisTLE = require('./debrisData');
 
 const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlNzk4ODVkYS0wMjRkLTQyN2YtODExYS0xZTgzZDY1NGVjOTUiLCJpZCI6NjgzNjQsImlhdCI6MTYzMjQ4MTUxNX0.3K7y8GNnJLhlBpYerfoWZinZnQu9i1nsvpYcXmd15-M';
-
+const API_KEY_N2YO = 'SC6U2R-BXHD4H-KZBZWW-4SCO';
 
 // initialising cesiumn with the acesstoken 
 Cesium.Ion.defaultAccessToken = accessToken;
@@ -49,6 +49,9 @@ debrisTLE.forEach((debris, i) => {
 // console.log(debrisRec[0]);
 
 
+
+
+
 // Adjusting the cesium clock 
 const totalSeconds = 60 * 60 * 6;
 const timestepInSeconds = 10;
@@ -81,13 +84,14 @@ debrisRec.forEach((rec, j) => {
     const position = Cesium.Cartesian3.fromRadians(p.longitude, p.latitude, p.height * 1000);
     positionsOverTime[j].addSample(time, position);
   }
-
+  // if(j == 133) console.log(debrisTLE[j]);
   // Visualize the satellite with a red dot.
   const satellitePoint = viewer.entities.add({
     id: j,
     position: positionsOverTime[j],
     name: debrisTLE[j].name,
     description: `<div>
+                    <h2>NORAD ID: ${debrisTLE[j].NORADid} </h2>
                     <h2>Element Set Age: ${debrisTLE[j].age} days</h2>
                     <h2>Ecentricity: ${debrisTLE[j].ecentricities} </h2>
                     <h2>Apogee Height: ${debrisTLE[j].apogeeHeight} km</h2>
@@ -97,7 +101,7 @@ debrisRec.forEach((rec, j) => {
                   </div>
                   <div>
                     <h2>Track when this particle:</h2>
-                    <button onclick=trackLocation()">track!</button>
+                    <button class="TrackLocation">track!</button>
                   </div>
                   `,
     point: { pixelSize: 5, color: Cesium.Color.DIMGREY},
@@ -205,8 +209,38 @@ viewer.selectedEntityChanged.addEventListener(function (entity) {
 });
 
 
-const trackLocation = () => {
-  console.log(viewer.trackedEntity.name)
+
+// Disabling sandbox to allow button click
+viewer.infoBox.frame.setAttribute('sandbox', 'allow-same-origin allow-popups allow-forms allow-scripts allow-top-navigation');
+const trackLocation =  async () => {
+  const id = debrisTLE[viewer.trackedEntity.id].NORADid;
+  const apiURL = `https://api.n2yo.com/rest/v1/satellite/radiopasses/${id}/41.702/-76.014/0/10/40/&apiKey=${API_KEY_N2YO}`;
+  const response = await fetch(apiURL);
+  const data = await response.json();
+  console.log(data);
+  console.log("dsvcd");
+  // console.log(viewer.trackedEntity.name)
+}
+const showTrackedInfo = (location) => {
+  console.log(location);
 }
 
+viewer.infoBox.frame.addEventListener('load', async function() {
+  //
+  // Now that the description is loaded, register a click listener inside
+  // the document of the iframe.
+  //
+  viewer.infoBox.frame.contentDocument.body.addEventListener('click', async function(e) {
+      //
+      // The document body will be rewritten when the selectedEntity changes,
+      // but this body listener will survive.  Now it must determine if it was
+      // one of the clickable buttons.
+      //
+      if (e.target && e.target.className === 'TrackLocation') {
+
+          const location = await trackLocation();
+          showTrackedInfo(location);
+      }
+  }, false);
+}, false);
 
