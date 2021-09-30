@@ -1,24 +1,26 @@
 
 
-const ag = 467000;
-const pg = 386000;
-const e = 0.0059357;
-var semiMajorAxis = (ag + pg)/2;
-var semiMinorAxis = semiMajorAxis * Math.sqrt(1 - Math.pow(e, 2));
+  
 
-// var positions = [];
+  // const ag = debrisTLE[id].apogeeHeight * 1000;
+  // const pg = debrisTLE[id].perigeeHeight * 1000;
+  // const e = debrisTLE[id].ecentricities;
+  // var semiMajorAxis = (ag + pg) / 2;
+  // var semiMinorAxis = semiMajorAxis * Math.sqrt(1 - Math.pow(e, 2));
 
-// for (var i = -180; i <= 180; i+=10) {
+  // var positions = [];
 
-//   var axis = semiMinorAxis + Math.cos(i * Math.PI / 180.0) * (semiMajorAxis - semiMinorAxis);
+  // for (var i = -180; i <= 180; i += 10) {
 
-//   // positions.push(Cesium.Cartesian3.fromDegrees(i, 0, axis));
-//   var inclination_m = Cesium.Matrix3.fromRotationY(-1 * Cesium.Math.toRadians(74.04));
-//   var rotated = Cesium.Matrix3.multiplyByVector(inclination_m, Cesium.Cartesian3.fromDegrees(i, 0, axis), new Cesium.Cartesian3());
-//   // console.log(rotated);
-//   positions.push(rotated);
+  //   var axis = semiMinorAxis + Math.cos(i * Math.PI / 180.0) * (semiMajorAxis - semiMinorAxis);
+  //   // var radius = semiMajorAxis * (1- Math.pow(e, 2)) / (1 + e * Math.cos(Cesium.Math.toRadians(i)));
+  //   // positions.push(Cesium.Cartesian3.fromDegrees(i, 0, axis));
+  //   var inclination_m = Cesium.Matrix3.fromRotationY(-1 * Cesium.Math.toRadians(debrisTLE[id].inclination));
+  //   var rotated = Cesium.Matrix3.multiplyByVector(inclination_m, Cesium.Cartesian3.fromDegrees(i, 0, axis), new Cesium.Cartesian3());
+  //   // console.log(rotated);
+  //   positions.push(rotated);
 
-// }
+  // }
 
 // var entity = viewer.entities.add({
 

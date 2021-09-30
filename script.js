@@ -2,6 +2,7 @@
 
 const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlNzk4ODVkYS0wMjRkLTQyN2YtODExYS0xZTgzZDY1NGVjOTUiLCJpZCI6NjgzNjQsImlhdCI6MTYzMjQ4MTUxNX0.3K7y8GNnJLhlBpYerfoWZinZnQu9i1nsvpYcXmd15-M';
 const API_KEY_N2YO = 'SC6U2R-BXHD4H-KZBZWW-4SCO';
+const API_KEY_RADAR = 'prj_live_pk_27e0b838d302829efc90e51b9b5fa2a560ff211c';
 
 // initialising cesiumn with the acesstoken 
 Cesium.Ion.defaultAccessToken = accessToken;
@@ -13,17 +14,17 @@ const viewer = new Cesium.Viewer('cesiumContainer', {
     style: Cesium.IonWorldImageryStyle.AERIAL_WITH_LABELS
   }),
   baseLayerPicker: false
-//   skyBox : new Cesium.SkyBox({
-//     sources : {
-//       positiveX : 'img1.jpeg',
-//       negativeX : 'img1.jpeg',
-//       positiveY : 'img1.jpeg',
-//       negativeY : 'img1.jpeg',
-//       positiveZ : 'img1.jpeg',
-//       negativeZ : 'img1.jpeg'
-//     }
-// }),
-  
+  //   skyBox : new Cesium.SkyBox({
+  //     sources : {
+  //       positiveX : 'img2.jpeg',
+  //       negativeX : 'img2.jpeg',
+  //       positiveY : 'img2.jpeg',
+  //       negativeY : 'img2.jpeg',
+  //       positiveZ : 'img2.jpeg',
+  //       negativeZ : 'img2.jpeg'
+  //     }
+  // }),
+
   // baseLayerPicker: false, geocoder: false, homeButton: false, infoBox: false,
   // navigationHelpButton: false, sceneModePicker: false
 });
@@ -100,11 +101,12 @@ debrisRec.forEach((rec, j) => {
                     <h2>Period: ${debrisTLE[j].period} minutes</h2>
                   </div>
                   <div>
-                    <h2>Track when this particle:</h2>
+                    <h2>Track when this particle will pass a particular location:</h2>
+                    <input type="text" name="location" id="location" placeholder="Enter a location of interest">  
                     <button class="TrackLocation">track!</button>
                   </div>
                   `,
-    point: { pixelSize: 5, color: Cesium.Color.DIMGREY},
+    point: { pixelSize: 5, color: Cesium.Color.DIMGREY },
     path: {
       show: true,
       width: 5,
@@ -142,8 +144,7 @@ viewer.scene.globe.tileLoadProgressEvent.addEventListener(() => {
 // picking a debris
 const displayOrbit = (id, polylines) => {
   positions = [];
-  for(let i=0; i<debrisTLE[id].period * 60; i += 10)
-  {
+  for (let i = 0; i < debrisTLE[id].period * 60; i += 10) {
     const time = Cesium.JulianDate.addSeconds(start, i, new Cesium.JulianDate());
     const jsDate = Cesium.JulianDate.toDate(time);
 
@@ -155,27 +156,7 @@ const displayOrbit = (id, polylines) => {
 
     positions.push(Cesium.Cartesian3.fromRadians(p.longitude, p.latitude, p.height * 1000));
   }
-  
 
-  // const ag = debrisTLE[id].apogeeHeight * 1000;
-  // const pg = debrisTLE[id].perigeeHeight * 1000;
-  // const e = debrisTLE[id].ecentricities;
-  // var semiMajorAxis = (ag + pg) / 2;
-  // var semiMinorAxis = semiMajorAxis * Math.sqrt(1 - Math.pow(e, 2));
-
-  // var positions = [];
-
-  // for (var i = -180; i <= 180; i += 10) {
-
-  //   var axis = semiMinorAxis + Math.cos(i * Math.PI / 180.0) * (semiMajorAxis - semiMinorAxis);
-  //   // var radius = semiMajorAxis * (1- Math.pow(e, 2)) / (1 + e * Math.cos(Cesium.Math.toRadians(i)));
-  //   // positions.push(Cesium.Cartesian3.fromDegrees(i, 0, axis));
-  //   var inclination_m = Cesium.Matrix3.fromRotationY(-1 * Cesium.Math.toRadians(debrisTLE[id].inclination));
-  //   var rotated = Cesium.Matrix3.multiplyByVector(inclination_m, Cesium.Cartesian3.fromDegrees(i, 0, axis), new Cesium.Cartesian3());
-  //   // console.log(rotated);
-  //   positions.push(rotated);
-
-  // }
 
   polylines.push(viewer.entities.add({
 
@@ -213,37 +194,88 @@ viewer.selectedEntityChanged.addEventListener(function (entity) {
 // Disabling sandbox to allow button click
 viewer.infoBox.frame.setAttribute('sandbox', 'allow-same-origin allow-popups allow-forms allow-scripts allow-top-navigation');
 
-const showTrackedInfo =  (location) => {
-  // const d =  new Date(1633005575 *1000);
-  console.log(location);
+
+// Tracking the debris and using api to predict the passes
+const trackLocation = async (location) => {
+
+  const queryLocation = location.split(' ').join('+');
+  // console.log(queryLocation);
+  const conv = await fetch(`https://api.radar.io/v1/geocode/forward?query=${queryLocation}`, {headers: {'Authorization': API_KEY_RADAR}})
+  const resp = await conv.json();
+  // console.log(resp);
+
+  const searchLatitude = resp.addresses[0].latitude;
+  const searchLongitude = resp.addresses[0].longitude;
+  // console.log(searchLongitude,searchLatitude);
+
+  if(searchLongitude && searchLatitude)
+  {
+    const id = debrisTLE[viewer.trackedEntity.id].NORADid;
+    const apiURL = `https://vast-basin-51313.herokuapp.com/https://api.n2yo.com/rest/v1/satellite/radiopasses/${id}/${searchLatitude}/${searchLongitude}/0/10/40/&apiKey=${API_KEY_N2YO}`;
+    const response = await fetch(apiURL, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+    const data = await response.json();
+    return data;
+    // console.log(data);
+    // console.log("dsvcd");
+  } 
+    
 }
 
-const trackLocation =  async () => {
-  
-  const id = debrisTLE[viewer.trackedEntity.id].NORADid;
-  const apiURL = `https://api.n2yo.com/rest/v1/satellite/radiopasses/${id}/41.702/-76.014/0/10/40/&apiKey=${API_KEY_N2YO}`;
-  const response = await fetch(apiURL);
-  const data = await response.json();
-  console.log(data);
-  console.log("dsvcd");
-  // console.log(viewer.trackedEntity.name)
+const removePassesInfo = () => {
+  document.getElementById("infoTable").innerHTML = "";
+  document.getElementById("toolbar").style.display = "none";
 }
 
-viewer.infoBox.frame.addEventListener('load', async function() {
+const showPasses = (data, location) => {
+  const {info,passes} = data;
+  // console.log(passes);
+  const infoTable = document.getElementById('infoTable')
+  const title = document.createElement("tr");
+  const Titlecontent = document.createElement("td");
+  Titlecontent.innerText = `${info.satname}(${info.satid}) will pass ${location} at following times`;
+  title.appendChild(Titlecontent);
+  const closeBtn = document.createElement("button");
+  closeBtn.innerText = "x";
+  closeBtn.onclick = removePassesInfo;
+  const closeBtnContainer = document.createElement("td");
+  closeBtnContainer.appendChild(closeBtn);
+  title.appendChild(closeBtnContainer);
+  infoTable.appendChild(title);
+
+  passes.forEach((pass,i) => {
+    const startTime = new Date(pass.startUTC *1000);
+    const endTime = new Date(pass.endUTC *1000);
+
+    const row = document.createElement("tr");
+    const content = document.createElement("td");
+    content.innerText = `${i}. Start Time: ${startTime} , End Time: ${endTime}`;
+    row.appendChild(content);
+    infoTable.appendChild(row);
+  })
+  const toolbar = document.getElementById("toolbar");
+  toolbar.style.display = "block";
+
+}
+
+viewer.infoBox.frame.addEventListener('load', async function () {
   //
   // Now that the description is loaded, register a click listener inside
   // the document of the iframe.
   //
-  viewer.infoBox.frame.contentDocument.body.addEventListener('click', async function(e) {
-      //
-      // The document body will be rewritten when the selectedEntity changes,
-      // but this body listener will survive.  Now it must determine if it was
-      // one of the clickable buttons.
-      //
-      if (e.target && e.target.className === 'TrackLocation') {
-
-          const location = await trackLocation();
-          showTrackedInfo(location);
+  viewer.infoBox.frame.contentDocument.body.addEventListener('click', async function (e) {
+    //
+    // The document body will be rewritten when the selectedEntity changes,
+    // but this body listener will survive.  Now it must determine if it was
+    // one of the clickable buttons.
+    //
+    if (e.target && e.target.className === 'TrackLocation') {
+      const location= viewer.infoBox.frame.contentDocument.getElementsByName("location")[0].value;
+      if(location !== '') 
+      {
+        // console.log(location)
+        const data = await trackLocation(location);
+        if(data) showPasses(data,location);
       }
+    }
   }, false);
 }, false);
