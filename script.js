@@ -212,7 +212,14 @@ viewer.selectedEntityChanged.addEventListener(function (entity) {
 
 // Disabling sandbox to allow button click
 viewer.infoBox.frame.setAttribute('sandbox', 'allow-same-origin allow-popups allow-forms allow-scripts allow-top-navigation');
+
+const showTrackedInfo =  (location) => {
+  // const d =  new Date(1633005575 *1000);
+  console.log(location);
+}
+
 const trackLocation =  async () => {
+  
   const id = debrisTLE[viewer.trackedEntity.id].NORADid;
   const apiURL = `https://api.n2yo.com/rest/v1/satellite/radiopasses/${id}/41.702/-76.014/0/10/40/&apiKey=${API_KEY_N2YO}`;
   const response = await fetch(apiURL);
@@ -220,9 +227,6 @@ const trackLocation =  async () => {
   console.log(data);
   console.log("dsvcd");
   // console.log(viewer.trackedEntity.name)
-}
-const showTrackedInfo = (location) => {
-  console.log(location);
 }
 
 viewer.infoBox.frame.addEventListener('load', async function() {
@@ -243,4 +247,3 @@ viewer.infoBox.frame.addEventListener('load', async function() {
       }
   }, false);
 }, false);
-
