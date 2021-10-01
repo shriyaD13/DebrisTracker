@@ -17,6 +17,8 @@ body {
   padding: 2px 5px;
   display: none;
   z-index: 11;
+  overflow-y: scroll;
+  max-height: 100vh;
 }
 .infoPanel {
     background: rgba(42,42,42,.8);

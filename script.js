@@ -89,7 +89,7 @@ debrisRec.forEach((rec, j) => {
   // Visualize the satellite with a red dot.
   let debrisColor;
   if(debrisTLE[j].name.includes('COSMOS')) debrisColor = Cesium.Color.ORANGERED;
-  else if(debrisTLE[j].name.includes('FENGYUN')) debrisColor = Cesium.Color.ORANGE;
+  else if(debrisTLE[j].name.includes('FENGYUN')) debrisColor = Cesium.Color.SLATEGREY;
   else debrisColor = Cesium.Color.SPRINGGREEN;
   const satellitePoint = viewer.entities.add({
     id: j,
