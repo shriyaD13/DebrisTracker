@@ -13,17 +13,17 @@ const viewer = new Cesium.Viewer('cesiumContainer', {
   imageryProvider: Cesium.createWorldImagery({
     style: Cesium.IonWorldImageryStyle.AERIAL_WITH_LABELS
   }),
-  baseLayerPicker: false
-  //   skyBox : new Cesium.SkyBox({
-  //     sources : {
-  //       positiveX : 'img2.jpeg',
-  //       negativeX : 'img2.jpeg',
-  //       positiveY : 'img2.jpeg',
-  //       negativeY : 'img2.jpeg',
-  //       positiveZ : 'img2.jpeg',
-  //       negativeZ : 'img2.jpeg'
-  //     }
-  // }),
+  baseLayerPicker: false,
+    skyBox : new Cesium.SkyBox({
+      sources : {
+        positiveX : 'img2.jpeg',
+        negativeX : 'img2.jpeg',
+        positiveY : 'img2.jpeg',
+        negativeY : 'img2.jpeg',
+        positiveZ : 'img2.jpeg',
+        negativeZ : 'img2.jpeg'
+      }
+  }),
 
   // baseLayerPicker: false, geocoder: false, homeButton: false, infoBox: false,
   // navigationHelpButton: false, sceneModePicker: false
@@ -103,7 +103,7 @@ debrisRec.forEach((rec, j) => {
                   <div>
                     <h2>Track when this particle will pass a particular location:</h2>
                     <input type="text" name="location" id="location" placeholder="Enter a location of interest">  
-                    <button class="TrackLocation">track!</button>
+                    <button class="TrackLocation">Track!</button>
                   </div>
                   `,
     point: { pixelSize: 5, color: Cesium.Color.DIMGREY },
