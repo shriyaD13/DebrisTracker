@@ -13,17 +13,17 @@ const viewer = new Cesium.Viewer('cesiumContainer', {
   imageryProvider: Cesium.createWorldImagery({
     style: Cesium.IonWorldImageryStyle.AERIAL_WITH_LABELS
   }),
-  baseLayerPicker: false,
-    skyBox : new Cesium.SkyBox({
-      sources : {
-        positiveX : 'img8.jpeg',
-        negativeX : 'img8.jpeg',
-        positiveY : 'img8.jpeg',
-        negativeY : 'img8.jpeg',
-        positiveZ : 'img8.jpeg',
-        negativeZ : 'img8.jpeg'
-      }
-  }),
+  baseLayerPicker: false
+  // skyBox: new Cesium.SkyBox({
+  //   sources: {
+  //     positiveX: 'img8.jpeg',
+  //     negativeX: 'img8.jpeg',
+  //     positiveY: 'img8.jpeg',
+  //     negativeY: 'img8.jpeg',
+  //     positiveZ: 'img8.jpeg',
+  //     negativeZ: 'img8.jpeg'
+  //   }
+  // }),
 
   // baseLayerPicker: false, geocoder: false, homeButton: false, infoBox: false,
   // navigationHelpButton: false, sceneModePicker: false
@@ -87,6 +87,10 @@ debrisRec.forEach((rec, j) => {
   }
   // if(j == 133) console.log(debrisTLE[j]);
   // Visualize the satellite with a red dot.
+  let debrisColor;
+  if(debrisTLE[j].name.includes('COSMOS')) debrisColor = Cesium.Color.ORANGERED;
+  else if(debrisTLE[j].name.includes('FENGYUN')) debrisColor = Cesium.Color.ORANGE;
+  else debrisColor = Cesium.Color.SPRINGGREEN;
   const satellitePoint = viewer.entities.add({
     id: j,
     position: positionsOverTime[j],
@@ -106,7 +110,10 @@ debrisRec.forEach((rec, j) => {
                     <button class="TrackLocation">Track!</button>
                   </div>
                   `,
-    point: { pixelSize: 5, color: Cesium.Color.DIMGREY },
+    point: { 
+      pixelSize: 5,
+      color: debrisColor
+    },
     path: {
       show: true,
       width: 5,
@@ -200,7 +207,7 @@ const trackLocation = async (location) => {
 
   const queryLocation = location.split(' ').join('+');
   // console.log(queryLocation);
-  const conv = await fetch(`https://api.radar.io/v1/geocode/forward?query=${queryLocation}`, {headers: {'Authorization': API_KEY_RADAR}})
+  const conv = await fetch(`https://api.radar.io/v1/geocode/forward?query=${queryLocation}`, { headers: { 'Authorization': API_KEY_RADAR } })
   const resp = await conv.json();
   // console.log(resp);
 
@@ -208,8 +215,7 @@ const trackLocation = async (location) => {
   const searchLongitude = resp.addresses[0].longitude;
   // console.log(searchLongitude,searchLatitude);
 
-  if(searchLongitude && searchLatitude)
-  {
+  if (searchLongitude && searchLatitude) {
     const id = debrisTLE[viewer.trackedEntity.id].NORADid;
     const apiURL = `https://vast-basin-51313.herokuapp.com/https://api.n2yo.com/rest/v1/satellite/radiopasses/${id}/${searchLatitude}/${searchLongitude}/0/10/40/&apiKey=${API_KEY_N2YO}`;
     const response = await fetch(apiURL, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
@@ -217,8 +223,8 @@ const trackLocation = async (location) => {
     return data;
     // console.log(data);
     // console.log("dsvcd");
-  } 
-    
+  }
+
 }
 
 const removePassesInfo = () => {
@@ -227,7 +233,7 @@ const removePassesInfo = () => {
 }
 
 const showPasses = (data, location) => {
-  const {info,passes} = data;
+  const { info, passes } = data;
   // console.log(passes);
   const infoTable = document.getElementById('infoTable')
   const title = document.createElement("tr");
@@ -242,9 +248,9 @@ const showPasses = (data, location) => {
   title.appendChild(closeBtnContainer);
   infoTable.appendChild(title);
 
-  passes.forEach((pass,i) => {
-    const startTime = new Date(pass.startUTC *1000);
-    const endTime = new Date(pass.endUTC *1000);
+  passes.forEach((pass, i) => {
+    const startTime = new Date(pass.startUTC * 1000);
+    const endTime = new Date(pass.endUTC * 1000);
 
     const row = document.createElement("tr");
     const content = document.createElement("td");
@@ -269,12 +275,11 @@ viewer.infoBox.frame.addEventListener('load', async function () {
     // one of the clickable buttons.
     //
     if (e.target && e.target.className === 'TrackLocation') {
-      const location= viewer.infoBox.frame.contentDocument.getElementsByName("location")[0].value;
-      if(location !== '') 
-      {
+      const location = viewer.infoBox.frame.contentDocument.getElementsByName("location")[0].value;
+      if (location !== '') {
         // console.log(location)
         const data = await trackLocation(location);
-        if(data) showPasses(data,location);
+        if (data) showPasses(data, location);
       }
     }
   }, false);
