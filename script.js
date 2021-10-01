@@ -16,12 +16,12 @@ const viewer = new Cesium.Viewer('cesiumContainer', {
   baseLayerPicker: false,
     skyBox : new Cesium.SkyBox({
       sources : {
-        positiveX : 'img2.jpeg',
-        negativeX : 'img2.jpeg',
-        positiveY : 'img2.jpeg',
-        negativeY : 'img2.jpeg',
-        positiveZ : 'img2.jpeg',
-        negativeZ : 'img2.jpeg'
+        positiveX : 'img4.jpeg',
+        negativeX : 'img4.jpeg',
+        positiveY : 'img4.jpeg',
+        negativeY : 'img4.jpeg',
+        positiveZ : 'img4.jpeg',
+        negativeZ : 'img4.jpeg'
       }
   }),
 
