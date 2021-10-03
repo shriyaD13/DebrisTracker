@@ -5,6 +5,7 @@
 
 
 Debris tracker is a web app. It maps 3 kinds of debris particles namely COSMOS 2251 DEB, IRIDIUM 33 DEB and FENGYUN 1C DEB onto a globe in real time. It tracks each debris particle and allows user to see their trajectory and predict their position at a different point in time. This feature can be used to track a particle and see it in future and take action accordingly. It also provides an option to track a specific particle and predict when in future will it pass user's or any other specified location.
+<img src="https://user-images.githubusercontent.com/58609212/135767851-a70a4799-5838-43ed-935f-29b887d70716.png"/>
 
 #### HOW DOES IT WORK?
 
@@ -21,16 +22,15 @@ For each debris particle, it provides a detailed information which includes:
 </ul>
 
 All the above information are just a click away.
+<img src="https://user-images.githubusercontent.com/58609212/135767899-23c199cf-3a04-46e4-8606-239a662c9ebc.png"/>
+
 
 User can also adjust the speed of the debris particle and see how it goes.
 
-
-
 The orbital environment can be seen at a future time using the timeline at the bottom
 
-
-
 The radio passes of a specific debris particle for next 10 days over a specific location can be known with just a simple search
+<img src="https://user-images.githubusercontent.com/58609212/135767863-d251d407-8fc0-42df-bfd9-9d4b48a0f0c3.png"/>
 
 #### BENEFITS OF TOOL:
 Space Debris Is huge problem that needs to be looked at as increasing amount of debris orbiting Earth could potentially limit our access to space, impacting not only exploration efforts, but routine aspects of our life on Earth. Earth orbits like LEO and Geostationary orbits are very important various satellite missions. They also allow us to set up global telecommunication networks and satellite navigation systems. Using this tool can help analyse the situation in different orbits and also understand how space debris is spread around. It can be used to predict the radio passes of a particle and further take action. It proivides the space data in a way that is easily understandable to the user.
