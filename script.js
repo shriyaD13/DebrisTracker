@@ -70,6 +70,7 @@ debrisRec.forEach((rec, j) => {
     let p;
     // console.log(j,positionAndVelocity)
     // if(!positionAndVelocity.position) console.log(debrisTLE[j]);
+    if(!positionAndVelocity.position) continue;
     p = satellite.eciToGeodetic(positionAndVelocity.position, gmst);
 
     const position = Cesium.Cartesian3.fromRadians(p.longitude, p.latitude, p.height * 1000);
